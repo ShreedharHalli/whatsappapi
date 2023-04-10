@@ -14,13 +14,6 @@ const client = new DynamoDBClient({
 
 
 
-/* const dbclient = new DynamoDBClient({
-  region: "ap-south-1",
-  credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  }
-}); */
 
 app.use(bodyParser.json())
 
@@ -59,13 +52,7 @@ app.post('/createuser', async function (req, res) {
 })
 
 
-/*
-{
-    "id" : "100",
-    "token" : "123456token",
-    "qrCode" : "123456qrCode"
-}
-*/
+
 
 
 app.get('/getuser/:id', async function (req, res) {
