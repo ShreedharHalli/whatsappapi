@@ -8,7 +8,6 @@ app.use(bodyParser.json())
 app.set('view engine', 'ejs')
 
 
-
 // DYNAMO DB CONNECTION
 const dynamoDB = new DynamoDBClient({
   region: "ap-south-1",
@@ -17,6 +16,9 @@ const dynamoDB = new DynamoDBClient({
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   }
 });
+
+
+
 
 
 // SHOW ALL CLIENTS
@@ -44,7 +46,7 @@ app.get('/showclients', async function (req, res) {
 
 
 
-const PORT = process.env.PORT || 3001
+const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Port listening on ${PORT}`)
 })
