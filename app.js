@@ -40,7 +40,7 @@ app.get('/showclients', async function (req, res) {
     res.send(items);
   } catch (err) {
     console.log(err);
-    res.status(500).send('Error retrieving data from DynamoDB');
+    res.status(500).send(err);
   }
 })
 
