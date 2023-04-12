@@ -29,9 +29,11 @@ app.get('/', (req, res) => {
 
 app.post('/generateqrcode', (req, res) => {
   console.log('called');
+  res.send('I am called')
   const formData = req.body;
   // Do something with the form data here
   console.log(formData);
+  res.send(formData)
 })
 
 // SHOW ALL CLIENTS
