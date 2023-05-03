@@ -43,31 +43,8 @@ app.get('/', (req, res) => {
 app.post('/generateqrcode', async (req, res) => {
   console.log('generateqrcode is called');
   const enteredPassword = req.body.password;
-  if (enteredPassword.length > 0) {
-    console.log('entered passwords length is more than 0');
-    // Set up the parameters for the GetItem command
-  const params = {
-    TableName: 'owners',
-    Key: { 'id': { N: '123456' } },
-    ProjectionExpression: 'myPassword'
-  };
+  if (enteredPassword === 'Mayur@130818') {
     try {
-      console.log('entered in try catch block');
-      // Execute the GetItem command
-    const command = new GetItemCommand(params);
-    const response = await dynamoDB.send(command);
-    console.log('waiting for dynamodb response');
-    console.log(response);
-    // Access the string value
-    const stringVal = response.Item.myPassword.S;
-    console.log(stringVal);
-    // const encryptedEnteredPass = await bcrypt.hash(enteredPassword, 10)
-    const check = await bcrypt.compare(enteredPassword, stringVal); 
-    console.log(check);
-    if (await bcrypt.compare(enteredPassword, stringVal)) {
-      console.log('matched');
-
-
       let token = generateRandomString();
       console.log('client is being started ', token);
       const client = new Client({
@@ -123,21 +100,19 @@ app.post('/generateqrcode', async (req, res) => {
 
 
 
-
+    } catch (err) {
+        console.log(err);
+      }
 
 
     } else {
       console.log('unmatched');
     }  
-    } catch (error) {
-      
-    }
+    })
     
-    } else {
-      console.log('empty password');
-    }
+  
     
-});
+
 
 
 
@@ -277,8 +252,12 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
   })
 
 
-  
 
+app.get('/logsessions', (req, res) => {
+  sessions.forEach(session => {
+    res.send(session.id);
+  });
+});
 
 
 
