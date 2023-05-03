@@ -44,7 +44,7 @@ app.post('/generateqrcode', async (req, res) => {
   console.log('generateqrcode is called');
   const enteredPassword = req.body.password;
   if (enteredPassword.length > 0) {
-    
+    console.log('entered passwords length is more than 0');
     // Set up the parameters for the GetItem command
   const params = {
     TableName: 'owners',
@@ -52,6 +52,7 @@ app.post('/generateqrcode', async (req, res) => {
     ProjectionExpression: 'myPassword'
   };
     try {
+      console.log('entered in try catch block');
       // Execute the GetItem command
     const command = new GetItemCommand(params);
     const response = await dynamoDB.send(command);
