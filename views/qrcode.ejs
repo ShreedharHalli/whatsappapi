@@ -8,9 +8,23 @@
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 </head>
-<body>
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <%= locals.qrCode || 'pending' %>
-    </div>
+<body class="blue-grey">
+     <div class="container">
+      <div class="row">
+         <div class="col s12 m6 xl12 l12">
+           <div class="card center">
+             <div class="card-content white-text">
+              <h6 class="black-text">Your Token is :<%= locals.tokenKey %></h6>
+              <% if (locals.qrCode) { %>
+                <span class="card-title black-text">Scan below QR Code with your whatsapp</span>
+                <img style="width: 50%; height: 50%;" src="<%= locals.qrCode %>" alt="WhatsApp QR Code" />
+              <% } else { %>
+                <h6 class="black-text"><%= "Pending..." %></h6>
+              <% } %>
+             </div>
+           </div>
+         </div>
+       </div>
+  </div>
 </body>
 </html>
