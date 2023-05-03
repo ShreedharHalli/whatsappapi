@@ -43,7 +43,6 @@ app.get('/', (req, res) => {
 app.post('/generateqrcode', async (req, res) => {
   console.log('generateqrcode is called');
   const enteredPassword = req.body.password;
-  console.log(enteredPassword);
   if (enteredPassword.length > 0) {
     
     // Set up the parameters for the GetItem command
@@ -56,7 +55,8 @@ app.post('/generateqrcode', async (req, res) => {
       // Execute the GetItem command
     const command = new GetItemCommand(params);
     const response = await dynamoDB.send(command);
-    
+    console.log('waiting for dynamodb response');
+    console.log(response);
     // Access the string value
     const stringVal = response.Item.myPassword.S;
     console.log(stringVal);
