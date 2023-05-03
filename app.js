@@ -223,8 +223,8 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
     let clientid = req.params.tokenKey;
     let obj = sessions.find((item) => item.id === clientid);
   if (obj) {
-    let contact = req.body.to_number;
-    let fileURL = req.body.type;
+    let contact = req.body.contact;
+    let file = req.body.fileURL;
     // let file = req.body.message;
     // let filename = req.body.filename;
     let stringedContact = contact.toString();
@@ -235,7 +235,7 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
     //  const media = new MessageMedia(fileType, file)
     // const media = MessageMedia.fromFilePath('./AstralGreen.jpg');
     // const media = MessageMedia.fromFilePath('./123.pdf');
-    const media = await MessageMedia.fromUrl(fileURL);
+    const media = await MessageMedia.fromUrl(file);
     console.log(media);
      await client.sendMessage(mobNoAsUID, media).then(response => {
       res.status(200).json({
