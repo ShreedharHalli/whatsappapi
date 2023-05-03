@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
 app.post('/generateqrcode', async (req, res) => {
   console.log('generateqrcode is called');
   const enteredPassword = req.body.password;
-  
+  console.log(enteredPassword);
   if (enteredPassword.length > 0) {
     
     // Set up the parameters for the GetItem command
