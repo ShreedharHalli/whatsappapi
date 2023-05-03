@@ -41,6 +41,7 @@ app.get('/', (req, res) => {
 
 
 app.post('/generateqrcode', async (req, res) => {
+  console.log('generateqrcode is called');
   const enteredPassword = req.body.password;
   
   if (enteredPassword.length > 0) {
