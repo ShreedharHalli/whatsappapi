@@ -224,9 +224,9 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
     let obj = sessions.find((item) => item.id === clientid);
   if (obj) {
     let contact = req.body.contact;
-    let file = req.body.file;
-    let mimeType = req.body.mimeType;
-    console.log(mimeType);
+    let file = req.body.fileURL;
+    // let mimeType = req.body.mimeType;
+    // console.log(mimeType);
     // let file = req.body.message;
     // let filename = req.body.filename;
     let stringedContact = contact.toString();
@@ -234,11 +234,10 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
       let client = obj.client;
       let mobNoAsUID = `91${stringedContact}@c.us`;
       // your code here
-     const media = new MessageMedia(mimeType, file)
+    //  const media = new MessageMedia(mimeType, file)
     // const media = MessageMedia.fromFilePath('./AstralGreen.jpg');
     // const media = MessageMedia.fromFilePath('./123.pdf');
-    // const media = await MessageMedia.fromUrl(file, {mimeType: mimeType});
-    // media.filename = 'file'
+    const media = await MessageMedia.fromUrl(file);
     console.log(media);
      await client.sendMessage(mobNoAsUID, media).then(response => {
       res.status(200).json({
