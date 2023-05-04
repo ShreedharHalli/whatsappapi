@@ -237,7 +237,7 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
     //  const media = new MessageMedia(fileType, file)
     // const media = MessageMedia.fromFilePath('./AstralGreen.jpg');
     // const media = MessageMedia.fromFilePath('./123.pdf');
-    const media = await MessageMedia.fromUrl(file, {mimeType: mimeType});
+    const media = await MessageMedia.fromUrl(file, { unsafeMime: true });
     console.log(media);
      await client.sendMessage(mobNoAsUID, media).then(response => {
       res.status(200).json({
