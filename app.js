@@ -9,6 +9,7 @@ const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 // const { marshall } = require("@aws-sdk/util-dynamodb");
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
 // const {parse, stringify, toJSON, fromJSON} = require('flatted');
 
 
@@ -217,6 +218,62 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
   })
 
 
+  
+
+  app.post('/sendfile/:tokenKey', async (req, res) => {
+    console.log('sendFile called');
+    let clientid = req.params.tokenKey;
+    let obj = sessions.find((item) => item.id === clientid);
+    if (obj) {
+      let contact = req.body.contact;
+      let fileURL = req.body.fileURL;
+      let fileName = req.body.fileName;
+      let stringedContact = contact.toString();
+      if (stringedContact.length === 10) {
+        let client = obj.client;
+        let mobNoAsUID = `91${stringedContact}@c.us`;
+  
+        // Download the file and save it to the local directory
+        const writer = fs.createWriteStream(`./path/to/${fileName}`);
+        const response = await axios({
+          url: fileURL,
+          method: 'GET',
+          responseType: 'stream'
+        });
+        response.data.pipe(writer);
+        await new Promise((resolve, reject) => {
+          writer.on('finish', resolve);
+          writer.on('error', reject);
+        });
+  
+        // Once the file is saved, create a MessageMedia object and send it
+        const media = await MessageMedia.fromFilePath(`./path/to/${fileName}`);
+        await client.sendMessage(mobNoAsUID, media).then(async response => {
+          // Delete the file after it has been sent
+          await fs.promises.unlink(`./path/to/${fileName}`);
+          res.status(200).json({
+            status: true,
+            response: response
+          });
+        }).catch(async err => {
+          // Delete the file if there was an error sending it
+          await fs.promises.unlink(`./path/to/${fileName}`);
+          res.status(500).json({
+            status: false,
+            response: err
+          });
+        });
+      }
+    }
+  });
+
+
+
+
+
+
+
+/* 
 
   app.post('/sendfile/:tokenKey', async (req, res) => {
     console.log('sendFile called');
@@ -225,10 +282,6 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
   if (obj) {
     let contact = req.body.contact;
     let file = req.body.fileURL;
-    // let mimeType = req.body.mimeType;
-    // console.log(mimeType);
-    // let file = req.body.message;
-    // let filename = req.body.filename;
     let stringedContact = contact.toString();
     if (stringedContact.length === 10) {
       let client = obj.client;
@@ -237,7 +290,7 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
     //  const media = new MessageMedia(mimeType, file)
     // const media = MessageMedia.fromFilePath('./AstralGreen.jpg');
     // const media = MessageMedia.fromFilePath('./123.pdf');
-    const media = await MessageMedia.fromUrl(file);
+    const media = await MessageMedia.fromFilePath('./path/to/image.png');
     console.log(media);
      await client.sendMessage(mobNoAsUID, media).then(response => {
       res.status(200).json({
@@ -253,7 +306,7 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
     }
   }
   })
-
+ */
 
 
 app.get('/logsessions', (req, res) => {
