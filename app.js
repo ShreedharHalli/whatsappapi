@@ -17,11 +17,11 @@ const mime = require('mime');
 
 
 require('dotenv').config();
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.set('view engine', 'ejs')
 
-// Middleware to handle URL encoded data
-app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
 const clientsFilePath = path.join(__dirname, 'clients.json');
 
