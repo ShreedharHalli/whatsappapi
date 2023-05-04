@@ -20,6 +20,7 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "flatted": "^3.2.7",
+    "mime": "^3.0.0",
     "qrcode": "^1.5.1",
     "whatsapp-web.js": "^1.19.5"
   }

@@ -10,6 +10,8 @@ const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
+const mime = require('mime');
+
 // const {parse, stringify, toJSON, fromJSON} = require('flatted');
 
 
@@ -218,8 +220,63 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
   })
 
 
+  app.post('/sendfile/:tokenKey', async (req, res) => {
+    console.log('sendFile called');
+    let clientid = req.params.tokenKey;
+    let obj = sessions.find((item) => item.id === clientid);
+    if (obj) {
+      let contact = req.body.contact;
+      let fileContent = req.body.file;
+      let fileName = req.body.fileName;
+      let mimeType = req.body.mimeType;
+      let stringedContact = contact.toString();
+      if (stringedContact.length === 10) {
+        let client = obj.client;
+        let mobNoAsUID = `91${stringedContact}@c.us`;
+  
+        // Decode the base64-encoded file content
+        const buffer = Buffer.from(fileContent.split(',')[1], 'base64');
+  
+        // Save the file to a local directory with the appropriate extension
+        const ext = mime.getExtension(mimeType);
+        const filePath = `./path/to/${fileName}.${ext}`;
+        await fs.promises.writeFile(filePath, buffer);
+  
+        // Once the file is saved, create a MessageMedia object and send it
+        const media = await MessageMedia.fromFilePath(filePath);
+        await client.sendMessage(mobNoAsUID, media).then(async response => {
+          // Delete the file after it has been sent
+          await fs.promises.unlink(filePath);
+          res.status(200).json({
+            status: true,
+            response: response
+          });
+        }).catch(async err => {
+          // Delete the file if there was an error sending it
+          await fs.promises.unlink(filePath);
+          res.status(500).json({
+            status: false,
+            response: err
+          });
+        });
+      }
+    }
+  });
   
 
+
+
+
+
+
+
+
+
+
+
+
+  
+/* 
   app.post('/sendfile/:tokenKey', async (req, res) => {
     console.log('sendFile called');
     let clientid = req.params.tokenKey;
@@ -234,13 +291,14 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
         let mobNoAsUID = `91${stringedContact}@c.us`;
   
         // Download the file and save it to the local directory
-        const writer = fs.createWriteStream(`./path/to/${fileName}`); // const writer = fs.createWriteStream(`./path/to/${fileName}`);
+        const writer = fs.createWriteStream(`./path/to/${fileName}`); 
         console.log('writer is ', writer);
         const response = await axios({
           url: fileURL,
           method: 'GET',
           responseType: 'stream'
         });
+        console.log(response);
         response.data.pipe(writer);
         await new Promise((resolve, reject) => {
           writer.on('finish', resolve);
@@ -269,7 +327,7 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
   });
 
 
-
+ */
 
 
 
