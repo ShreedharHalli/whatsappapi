@@ -234,7 +234,8 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
         let mobNoAsUID = `91${stringedContact}@c.us`;
   
         // Download the file and save it to the local directory
-        const writer = fs.createWriteStream(`./path/to/${fileName}`);
+        const writer = fs.createWriteStream(`./path/to/${fileName}`); // const writer = fs.createWriteStream(`./path/to/${fileName}`);
+        console.log('writer is ', writer);
         const response = await axios({
           url: fileURL,
           method: 'GET',
@@ -250,14 +251,14 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
         const media = await MessageMedia.fromFilePath(`./path/to/${fileName}`);
         await client.sendMessage(mobNoAsUID, media).then(async response => {
           // Delete the file after it has been sent
-          await fs.promises.unlink(`./path/to/${fileName}`);
+          // await fs.promises.unlink(`./path/to/${fileName}`);
           res.status(200).json({
             status: true,
             response: response
           });
         }).catch(async err => {
           // Delete the file if there was an error sending it
-          await fs.promises.unlink(`./path/to/${fileName}`);
+          // await fs.promises.unlink(`./path/to/${fileName}`);
           res.status(500).json({
             status: false,
             response: err
