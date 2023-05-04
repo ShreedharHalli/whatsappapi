@@ -224,7 +224,9 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
     let obj = sessions.find((item) => item.id === clientid);
   if (obj) {
     let contact = req.body.contact;
+    console.log(contact);
     let file = req.body.fileURL;
+    console.log(file);
     // let file = req.body.message;
     // let filename = req.body.filename;
     let stringedContact = contact.toString();
