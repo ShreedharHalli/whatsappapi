@@ -9,7 +9,6 @@ const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 // const { marshall } = require("@aws-sdk/util-dynamodb");
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
 const mime = require('mime');
 
 // const {parse, stringify, toJSON, fromJSON} = require('flatted');
@@ -239,7 +238,8 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
   
         // Save the file to a local directory with the appropriate extension
         const ext = mime.getExtension(mimeType);
-        const filePath = `./path/to/${fileName}.${ext}`;
+        const filePath = `./path/to/${fileName}`;
+        // const filePath = `./path/to/${fileName}.${ext}`;
         await fs.promises.writeFile(filePath, buffer);
   
         // Once the file is saved, create a MessageMedia object and send it
@@ -275,97 +275,7 @@ app.post('/sendmessage/:tokenKey', async (req, res) => {
 
 
 
-  
-/* 
-  app.post('/sendfile/:tokenKey', async (req, res) => {
-    console.log('sendFile called');
-    let clientid = req.params.tokenKey;
-    let obj = sessions.find((item) => item.id === clientid);
-    if (obj) {
-      let contact = req.body.contact;
-      let fileURL = req.body.fileURL;
-      let fileName = req.body.fileName;
-      let stringedContact = contact.toString();
-      if (stringedContact.length === 10) {
-        let client = obj.client;
-        let mobNoAsUID = `91${stringedContact}@c.us`;
-  
-        // Download the file and save it to the local directory
-        const writer = fs.createWriteStream(`./path/to/${fileName}`); 
-        console.log('writer is ', writer);
-        const response = await axios({
-          url: fileURL,
-          method: 'GET',
-          responseType: 'stream'
-        });
-        console.log(response);
-        response.data.pipe(writer);
-        await new Promise((resolve, reject) => {
-          writer.on('finish', resolve);
-          writer.on('error', reject);
-        });
-  
-        // Once the file is saved, create a MessageMedia object and send it
-        const media = await MessageMedia.fromFilePath(`./path/to/${fileName}`);
-        await client.sendMessage(mobNoAsUID, media).then(async response => {
-          // Delete the file after it has been sent
-          // await fs.promises.unlink(`./path/to/${fileName}`);
-          res.status(200).json({
-            status: true,
-            response: response
-          });
-        }).catch(async err => {
-          // Delete the file if there was an error sending it
-          // await fs.promises.unlink(`./path/to/${fileName}`);
-          res.status(500).json({
-            status: false,
-            response: err
-          });
-        });
-      }
-    }
-  });
 
-
- */
-
-
-
-
-/* 
-
-  app.post('/sendfile/:tokenKey', async (req, res) => {
-    console.log('sendFile called');
-    let clientid = req.params.tokenKey;
-    let obj = sessions.find((item) => item.id === clientid);
-  if (obj) {
-    let contact = req.body.contact;
-    let file = req.body.fileURL;
-    let stringedContact = contact.toString();
-    if (stringedContact.length === 10) {
-      let client = obj.client;
-      let mobNoAsUID = `91${stringedContact}@c.us`;
-      // your code here
-    //  const media = new MessageMedia(mimeType, file)
-    // const media = MessageMedia.fromFilePath('./AstralGreen.jpg');
-    // const media = MessageMedia.fromFilePath('./123.pdf');
-    const media = await MessageMedia.fromFilePath('./path/to/image.png');
-    console.log(media);
-     await client.sendMessage(mobNoAsUID, media).then(response => {
-      res.status(200).json({
-        status: true,
-        response: response
-      });
-    }).catch(err => {
-      res.status(500).json({
-        status: false,
-        response: err
-      });
-    });
-    }
-  }
-  })
- */
 
 
 app.get('/logsessions', (req, res) => {
@@ -376,33 +286,6 @@ app.get('/logsessions', (req, res) => {
 
 
 
-
-
-/* 
-// SHOW ALL CLIENTS
-app.get('/showclients', async function (req, res) {
-  // res.render('index', {title : 'world'})
-  const params = {
-    TableName: 'whatsappapiclients'
-  };
-
-  try {
-    const data = await dynamoDB.send(new ScanCommand(params));
-    const items = data.Items.map(item => {
-      return {
-        id: item.id,
-        token: item.token,
-        // Add other attributes as needed
-      };
-    });
-    res.send(items);
-  } catch (err) {
-    console.log(err);
-    res.status(500).send(err);
-  }
-})
-
- */
 
 const PORT = 3001
 app.listen(PORT, () => {
